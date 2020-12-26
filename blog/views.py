@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from  django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 from django.views.generic.edit import UpdateView , DeleteView
+from . predictions import Classifier
 # Create your views here.
 
 
@@ -24,7 +25,15 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
-    # template_name = 'blog/post_detail.html'
+    classifier = Classifier()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        data = super().get_object()
+        context["number"] = self.classifier.classify(str(data.content))
+        return context
+    
+
 
 class CreatePostView(LoginRequiredMixin , CreateView):
     model = Post
