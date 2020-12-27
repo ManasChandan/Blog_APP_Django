@@ -7,6 +7,7 @@ from  django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 from django.views.generic.edit import UpdateView , DeleteView
 from . predictions import Classifier
+from . ThirdAPI import Weather
 # Create your views here.
 
 
@@ -22,11 +23,20 @@ class PostListView(ListView):
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering = ['-date_posted']
+    weather = Weather()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context["weather"] = self.weather.CityWeather()
+        if 'city' in self.kwargs:
+            context["weather"] = self.weather.CityWeather(self.kwargs['city'])
+        else:
+            context["weather"] = self.weather.CityWeather()
+        return context
 
 class PostDetailView(DetailView):
     model = Post
     classifier = Classifier()
-    
+    weather = Weather()
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         data = super().get_object()

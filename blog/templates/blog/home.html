@@ -1,7 +1,11 @@
 {% extends 'blog/base.html' %}
 {% block content %}
 {% for post in posts %}
-<article class="media content-section">
+{% if post.id|divisibleby:2 == True  %}
+<article class="media content-section bg-warning text-dark">
+{% else %}
+<article class="media content-section bg-info text-dark">
+{% endif %}
   <img class="rounded-circle article-img" src="{{ post.author.profiel.image.url}}" alt="">
   <div class="media-body">
     <div class="article-metadata">
@@ -14,3 +18,37 @@
 </article>
 {% endfor %}
 {% endblock content %}
+{% block sidebars %}
+<div class="card" style="width: 18rem;">
+  <img src="https://source.unsplash.com/1600x1000/?{{ weather.city }}" class="card-img-top d-block w-100" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">{{ weather.city }}</h5>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Temperatur:</strong> {{ weather.temp }} C</li>
+    <li class="list-group-item"><strong>Pressure:</strong> {{ weather.pre }} hpa</li>
+    <li class="list-group-item"><strong>Humidity:</strong> {{ weather.humid }} %</li>
+  </ul>
+  <div class="card-body">
+  <div class="dropdown">
+  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+    Cities
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <li><a class="dropdown-item" href="/list/Delhi">Delhi</a></li>
+    <li><a class="dropdown-item" href="/list/Mumbai">Mumbai</a></li>
+    <li><a class="dropdown-item" href="/list/Kolkata">Kolkata</a></li>
+    <li><a class="dropdown-item" href="/list/Chennai">Chennai</a></li>
+  </ul>
+</div>
+  {% comment %} <ul>
+    <a href="/list/Delhi" class="btn btn-primary">Delhi</a>
+    <a href="/list/Mumbai" class="btn btn-primary">Mumbai</a>
+  </ul>
+  <ul>
+    <a href="/list/Kolkata" class="btn btn-primary">Kolkata</a>
+    <a href="/list/Chennai" class="btn btn-primary">Chennai</a> 
+  </ul> {% endcomment %}
+  </div>
+</div>
+{% endblock sidebars %}
